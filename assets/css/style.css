@@ -1,0 +1,262 @@
+:root{
+
+    /* Font Family */
+  
+    --bs-font-sans-serif:"Inter", "Helvetica Neue", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 
+                          "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+    /* background color */
+
+    --bs-bg-gradient-1: linear-gradient(135deg, #c56b16, #ba68d3, #3a5fa3);
+    --bs-bg-red: #ff0000;
+
+    /* Font color */
+
+    --bs-font-white: #ffffff;
+    --bs-font-dark: #000000;
+    --bs-font-pink: #f809b0;
+
+    /* Font Size*/
+
+    --bs-font-size-base: 0.8rem;
+    --bs-font-size-1: 1rem;
+    --bs-font-size-2: 1.25rem;
+    --bs-font-size-3: 1.5rem;
+    --bs-font-size-4: 2rem;
+    --bs-font-size-5: 2.5rem;
+}
+  
+body, html 
+{
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+    height: 100%;
+    font-family: "Open Sans", sans-serif;
+}
+  
+a
+{
+    text-decoration: none;
+}
+  
+li
+{
+  list-style: none;
+}
+  
+
+/*********************** Navbar **********************/
+nav
+{
+    font-size: var(--bs-font-size-3);   
+    font-weight:bolder;
+    background: var(--bs-bg-gradient-1);
+}
+
+/* Cart Badge */
+.cart-badge 
+ {
+    position: absolute;
+    top: -5px;
+    right: -7px;
+    background: var(--bs-bg-red);
+    color: var(--bs-font-white);
+    font-size: var(--bs-font-size-base);
+    font-weight: bold;
+    padding: 3px 7px;
+    border-radius: 50%;
+}
+
+/* Dropdown */
+
+#cart-dropdown 
+{
+    right: 0;
+    top: 100%;
+    min-width: 300px;
+    max-width: 90vw;
+    background: var(--bs-font-white);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+#cart-dropdown.show 
+{
+    display: block;
+}
+
+@media (max-width: 768px) 
+{ /* Tablets and smaller */
+    #cart-dropdown 
+    {
+        width: 280px;
+    }
+}
+
+@media (max-width: 480px) 
+{ /* Mobile screens */
+    #cart-dropdown 
+    {
+        width: 90vw; 
+    }
+}
+
+
+/**************************  header *********************/
+
+#header 
+{
+    border-bottom: 2px solid #000; 
+}
+
+/************************ carousel ********************/
+
+.carousel-img 
+{
+    max-height: 250px; 
+    object-fit: cover;
+    border-radius: 50px;
+}
+
+#carouselLeft 
+{
+    border: 2px solid #2e8060;
+    width: 100%;
+    height: auto;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+}
+
+.offer 
+{
+    color: #222;
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    text-align: center;
+    font-size: var(--bs-font-size-base);
+}
+
+.off 
+{
+    color: var(--bs-font-pink);
+    display: inline-block;
+    animation: blinker 1s ease-in-out infinite;
+}
+
+@keyframes blinker 
+{
+    10% 
+    {
+        transform: scale(1.1);
+    }
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) 
+{
+    .carousel-img 
+    {
+        max-height: 200px; 
+    }
+}
+
+/************************ Main ***********************/
+
+
+/* Card Styling */
+.card 
+{
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.card:hover 
+{
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.card-img-top 
+{
+    object-fit: cover;
+    height: 250px;
+    width: 100%;
+    border-radius: 12px 12px 0 0;
+}
+
+.card-body 
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    padding: 20px;
+    border-radius: 0 0 12px 12px;
+}
+
+.card-title 
+{
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #007bff;
+}
+
+/********************* Contact Form ******************/
+
+.contact 
+{
+    background-color: black;
+}
+
+.contact-container 
+{
+    max-width: 900px;
+    margin: 50px auto;
+    background: #222;
+    color: white;   
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.form-control 
+{
+    background: #333;
+    color: white;
+    border: none;
+}
+
+.form-control:focus 
+{
+    background: #444;
+    color: white;
+    box-shadow: none;
+}
+
+/******************** Payment page ******************/
+
+/* QR Code */
+
+.qr-container 
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Footer */
+
+footer 
+{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #f8f9fa; 
+    z-index: 1000;
+}

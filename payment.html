@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Cart - IoT Company</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="index.html">IoT Company</a>
+        </div>
+    </nav>
+
+    <!-- Cart Section -->
+    <div class="container mt-2">
+        <h2 class="text-center">Payment Confirmation</h2>
+        <h4 class="text-center text-muted">Order Summary</h4>
+
+        <!-- Billing Information -->
+        <div class="card p-3 mt-2">
+            <h5>Billing Information</h5>
+            <div id="billing_info"></div>
+        </div>
+
+        <!-- Cart Items -->
+        <div class="card p-3 mt-2">
+            <h5>Cart Items</h5>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Name</th>
+                        <th>Qty</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="cart_items"></tbody>
+            </table>
+        </div>
+
+        <!-- QR Code for Payment -->
+        <div class="row qr-container">
+            <div class="col-md-12">
+                <div class="card p-3 mt-2">
+                    <div class="d-flex justify-content-around  align-items-center">
+                        <div class="qrcode text-center">
+                            <h5>Scan QR Code to Pay</h5>
+                            <img id="qr_code" src="" alt="QR Code" class="img-fluid" width="200">
+                        </div>
+                        <div class="text-center mt-3">
+                            <h5>Total Amount: <span id="final_total" class="text-danger">₹0.00</span></h5>
+                            <button id="confirm_payment" class="btn btn-success">Confirm Payment</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="height: 100px;"></div>
+
+    <!-- Footer -->
+     
+    <footer class="bg-light py-3">
+        <div class="container">
+            <div class="row justify-content-center text-muted">
+                <div class="col-12 text-center">
+                    <p class="mb-0">
+                        <a class="text-muted" href="#" target="_blank">
+                            <strong>&copy; IOT COMPANY</strong>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+</body>
+</html>
