@@ -207,6 +207,19 @@ nav
     color: #007bff;
 }
 
+
+
+.cart .cart-items table 
+{
+    width: 100%;
+    white-space: nowrap; /* Prevents text wrapping in tables */
+}
+
+img 
+{
+    max-width: 100%;
+    height: auto;
+}
 /********************* Contact Form ******************/
 
 .contact 

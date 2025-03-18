@@ -5,7 +5,7 @@ window.showCart = function ()
 };
 
 
-document.addEventListener("DOMContentLoaded", function () 
+function initializeCart() 
 {
     const cartBadge = document.getElementById("cart-badge");
     const cartDropdownItems = document.getElementById("cart-dropdown-items");
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function ()
         cart.forEach((item, index) => 
         {
             const cartItem = document.createElement("div");
-            cartItem.classList.add("cart-item","d-flex", "align-items-center", "mb-2");
+            cartItem.classList.add("cart-item", "d-flex", "align-items-center", "mb-2");
 
             cartItem.innerHTML = `
                 <img src="${item.image}" alt="${item.name}" class="me-2" style="width: 50px; height: 50px;">
@@ -51,9 +51,8 @@ document.addEventListener("DOMContentLoaded", function ()
             cartDropdownItems.appendChild(cartItem);
         });
 
-       // Stop dropdown from closing when clicking inside it
-       cartDropdown.addEventListener("click", function (event) 
-       {
+        cartDropdown.addEventListener("click", function (event) 
+        {
             event.stopPropagation();
         });
 
@@ -61,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function ()
         {
             button.addEventListener("click", function (event) 
             {
-                event.stopPropagation(); 
+                event.stopPropagation();
                 let index = this.getAttribute("data-index");
                 cart.splice(index, 1);
                 localStorage.setItem("cart", JSON.stringify(cart));
@@ -71,35 +70,29 @@ document.addEventListener("DOMContentLoaded", function ()
         });
     }
 
-    if (addToCartButtons.length > 0) 
+    function addToCart(event) 
     {
-        addToCartButtons.forEach(button => 
+        event.preventDefault();
+        const card = event.target.closest(".card");
+        const productName = card.querySelector(".card-title").textContent;
+        const productImage = card.querySelector(".card-img-top").src;
+        const priceText = card.querySelector(".card-text").textContent.replace(/[^\d.]/g, "");
+        const productPrice = parseFloat(priceText);
+
+        let existingItem = cart.find(item => item.name === productName);
+
+        if (existingItem) 
         {
-            button.addEventListener("click", function (event) 
-            {
-                event.preventDefault();
-                const card = this.closest(".card");
-                const productName = card.querySelector(".card-title").textContent;
-                const productImage = card.querySelector(".card-img-top").src;
-                const priceText = card.querySelector(".card-text").textContent.replace(/[^\d.]/g, "");
-                const productPrice = parseFloat(priceText);
+            existingItem.quantity++;
+        } 
+        else 
+        {
+            cart.push({ name: productName, image: productImage, price: productPrice, quantity: 1 });
+        }
 
-                let existingItem = cart.find(item => item.name === productName);
-
-                if (existingItem) 
-                {
-                    existingItem.quantity++;
-                } 
-                else 
-                {
-                    cart.push({ name: productName, image: productImage, price: productPrice, quantity: 1 });
-                }
-
-                localStorage.setItem("cart", JSON.stringify(cart));
-                updateCartBadge();
-                renderCartDropdown();
-            });
-        });
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updateCartBadge();
+        renderCartDropdown();
     }
 
     function toggleDropdown(event) 
@@ -111,10 +104,22 @@ document.addEventListener("DOMContentLoaded", function ()
 
     function closeDropdown(event) 
     {
-        if (!cartDropdown.contains(event.target) && !cartIcon.contains(event.target)) 
+         // Check if elements exist before calling .contains()
+        if (cartDropdown && cartIcon) 
         {
-            cartDropdown.classList.remove("show");
+            if (!cartDropdown.contains(event.target) && !cartIcon.contains(event.target)) 
+            {
+                cartDropdown.classList.remove("show");
+            }
         }
+    }
+
+    if (addToCartButtons.length > 0) 
+    {
+        addToCartButtons.forEach(button => 
+        {
+            button.addEventListener("click", addToCart);
+        });
     }
 
     if (cartIcon) 
@@ -126,14 +131,19 @@ document.addEventListener("DOMContentLoaded", function ()
 
     updateCartBadge();
     renderCartDropdown();
-});
+}
+
+// Call the function after DOM is loaded
+
+document.addEventListener("DOMContentLoaded", initializeCart);
+
 
 
 
 
 // ----------------------- Cart details -------------------------------
 
-document.addEventListener("DOMContentLoaded", function () 
+function initializeCartPage() 
 {
     const cartTableBody = document.getElementById("add_row");
     const cartSummary = document.getElementById("cart_summary"); 
@@ -142,6 +152,8 @@ document.addEventListener("DOMContentLoaded", function ()
 
     function renderCartPage() 
     {
+        if (!cartTableBody || !cartSummary) return;
+
         cartTableBody.innerHTML = "";
         cartSummary.innerHTML = ""; 
 
@@ -185,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function ()
             cartSummary.innerHTML = `
                 <tr>
                     <td colspan="3"></td>
-                    <td><strong>Total Ammount:</strong></td>
+                    <td><strong>Total Amount:</strong></td>
                     <td><strong>₹${finalTotal.toFixed(2)}</strong></td>
                 </tr>
             `;
@@ -210,13 +222,17 @@ document.addEventListener("DOMContentLoaded", function ()
                 </tr>
                 <tr>
                     <td colspan="4"></td>
-                    <td><strong>Total Ammount:</strong></td>
+                    <td><strong>Total Amount:</strong></td>
                     <td><strong>₹${finalTotal.toFixed(2)}</strong></td>
                 </tr>
             `;
         }
 
-        // Attach event listeners for increasing and decreasing quantity
+        attachEventListeners();
+    }
+
+    function attachEventListeners() 
+    {
         document.querySelectorAll(".increase-qty").forEach(button => 
         {
             button.addEventListener("click", function () 
@@ -251,7 +267,6 @@ document.addEventListener("DOMContentLoaded", function ()
             });
         });
 
-        // Remove item from cart
         if (!isCheckoutPage) 
         {
             document.querySelectorAll(".remove").forEach(button =>
@@ -282,38 +297,65 @@ document.addEventListener("DOMContentLoaded", function ()
     };
 
     renderCartPage();
+}
+
+// Call the function after DOM is loaded
+document.addEventListener("DOMContentLoaded", initializeCartPage);
+
+
+function initializeEmailJS() 
+{
+    if (document.getElementById("contact-form") || document.getElementById("checkout-form")) 
+        {
+        if (typeof emailjs !== "undefined") 
+        {
+            emailjs.init("Gowri_123"); // Replace with your actual EmailJS user ID
+        } 
+        else 
+        {
+            console.error("EmailJS is not loaded on this page.");
+        }
+    }
+}
+
+// Call the function only when the document is loaded
+document.addEventListener("DOMContentLoaded", function () {
+    initializeEmailJS();
 });
+
 
 
 //   Checkout
 
-document.addEventListener("DOMContentLoaded", function () 
+function initializeCheckoutPage() 
 {
     const checkoutForm = document.getElementById("checkout-form");
 
-    if (checkoutForm) 
+    if (!checkoutForm) return;
+
+    checkoutForm.addEventListener("submit", function (event) 
     {
-        checkoutForm.addEventListener("submit", function (event) 
+        event.preventDefault(); // Prevent form submission
+
+        // Get Billing Info
+        let billingInfo = 
         {
-            event.preventDefault(); // Prevent form submission
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value,
+            address: document.getElementById("address").value,
+            phone: document.getElementById("phone").value
+        };
 
-            // Get Billing Info
-            let billingInfo = 
-            {
-                name: document.getElementById("name").value.trim(),
-                email: document.getElementById("email").value.trim(),
-                address: document.getElementById("address").value.trim(),
-                phone: document.getElementById("phone").value.trim()
-            };
+        // Store Billing Info in Local Storage
+        localStorage.setItem("billingInfo", JSON.stringify(billingInfo));
 
-            // Store Billing Info in Local Storage
-            localStorage.setItem("billingInfo", JSON.stringify(billingInfo));
+        // Redirect to Payment Page
+        window.location.href = "payment.html";
+    });
+}
 
-            //  Redirect to Payment Page
-            window.location.href = "payment.html";
-        });
-    }
-});
+// Call the function after DOM is loaded
+document.addEventListener("DOMContentLoaded", initializeCheckoutPage);
 
 
 
@@ -346,7 +388,7 @@ document.addEventListener("DOMContentLoaded", function ()
 
 // payment page 
 
-document.addEventListener("DOMContentLoaded", function () 
+function initializePaymentPage() 
 {
     const billingInfoDiv = document.getElementById("billing_info");
     const cartItemsTable = document.getElementById("cart_items");
@@ -354,26 +396,38 @@ document.addEventListener("DOMContentLoaded", function ()
     const qrCodeImg = document.getElementById("qr_code");
     const confirmPaymentBtn = document.getElementById("confirm_payment");
 
-    // Retrieve Billing Information and Cart from Local Storage
+    if (!billingInfoDiv || !cartItemsTable || !finalTotalSpan || !qrCodeImg || !confirmPaymentBtn) return;
+
     let billingInfo = JSON.parse(localStorage.getItem("billingInfo")) || {};
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    // Display Billing Information
+    displayBillingInfo(billingInfo, billingInfoDiv);
+    let finalTotal = displayCartItems(cart, cartItemsTable, finalTotalSpan);
+    generateQRCode(finalTotal, qrCodeImg);
+    setupPaymentConfirmation(confirmPaymentBtn, billingInfo, cart, finalTotal);
+}
+
+// to display billing information
+function displayBillingInfo(billingInfo, billingInfoDiv) 
+{
     if (billingInfo && billingInfo.name) 
     {
         billingInfoDiv.innerHTML = `
-            <p><strong>Name:</strong> ${billingInfo.name || "N/A"}</p>
-            <p><strong>Email:</strong> ${billingInfo.email || "N/A"}</p>
-            <p><strong>Address:</strong> ${billingInfo.address || "N/A"}</p>
-            <p><strong>Phone:</strong> ${billingInfo.phone || "N/A"}</p>
+            <p><strong>Name:</strong> ${billingInfo.name}</p>
+            <p><strong>Email:</strong> ${billingInfo.email}</p>
+            <p><strong>Address:</strong> ${billingInfo.address}</p>
+            <p><strong>Phone:</strong> ${billingInfo.phone}</p>
         `;
-    }
+    } 
     else 
     {
         billingInfoDiv.innerHTML = `<p class="text-danger">Billing information not found. Please go back and enter details.</p>`;
     }
+}
 
-    // Display Cart Items
+// to display cart items and calculate final total
+function displayCartItems(cart, cartItemsTable, finalTotalSpan) 
+{
     cartItemsTable.innerHTML = "";
     let subtotal = 0;
 
@@ -393,7 +447,6 @@ document.addEventListener("DOMContentLoaded", function ()
         `;
     });
 
-    // Calculate GST (18%) & Final Total
     let gst = subtotal * 0.18;
     let finalTotal = isNaN(subtotal + gst) ? 0 : subtotal + gst;
 
@@ -401,10 +454,14 @@ document.addEventListener("DOMContentLoaded", function ()
     console.log("GST (18%):", gst);
     console.log("Final Total Amount:", finalTotal);
 
-    // Display Final Amount in UI
     finalTotalSpan.textContent = `₹${finalTotal.toFixed(2)}`;
+    
+    return finalTotal;
+}
 
-    // Generate QR Code for Payment
+// to generate QR code for payment
+function generateQRCode(finalTotal, qrCodeImg) 
+{
     let upiID = "example@upi";
     let upiPaymentURL = `upi://pay?pa=${upiID}&pn=YourName&mc=1234&tid=ABCD1234&tr=${finalTotal.toFixed(2)}&tn=Payment%20for%20Order`;
 
@@ -416,8 +473,12 @@ document.addEventListener("DOMContentLoaded", function ()
     qrCodeImg.src = qrUrl; 
 
     console.log("Generated QR Code URL:", qrUrl);
+}
 
-    // Confirm Payment & Send Email
+// to set up payment confirmation
+
+function setupPaymentConfirmation(confirmPaymentBtn, billingInfo, cart, finalTotal) 
+{
     confirmPaymentBtn.addEventListener("click", function () 
     {
         if (!billingInfo.email) 
@@ -426,10 +487,6 @@ document.addEventListener("DOMContentLoaded", function ()
             return;
         }
 
-        // Debugging: Log email before sending
-        console.log("Sending email to:", billingInfo.email);
-
-        // Format Order Details
         let emailParams = 
         {
             to_email: billingInfo.email,
@@ -454,29 +511,74 @@ document.addEventListener("DOMContentLoaded", function ()
                 console.error("Email Error:", error);
             });
     });
-});
+}
+
+// Call the function after DOM is loaded
+document.addEventListener("DOMContentLoaded", initializePaymentPage);
 
 
 
 // Contact page
 
-emailjs.init("CPLDU8Q42d1UX6ypJ"); 
-        document.getElementById("contact-form").addEventListener("submit", function(event) 
+document.addEventListener("DOMContentLoaded", function () 
+{
+    emailjs.init("CPLDU8Q42d1UX6ypJ"); 
+
+    const contactForm = document.getElementById("contact-form");
+
+    if (contactForm) 
+    {
+        contactForm.addEventListener("submit", handleContactFormSubmit);
+    }
+});
+
+// Function to handle form submission
+
+function handleContactFormSubmit(event) 
+{
+    event.preventDefault();
+
+    const formData = getContactFormData();
+    
+    sendContactMessage(formData);
+}
+
+// Function to get form data
+
+function getContactFormData() 
+{
+    return {
+        name: document.getElementById("name").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        message: document.getElementById("message").value.trim()
+    };
+}
+
+// Function to send the message using EmailJS
+
+function sendContactMessage(formData) 
+{
+    emailjs.send("Gowri_123", "Gowri_4321", formData)
+        .then(() => 
         {
-            event.preventDefault();
-            
-            emailjs.send("Gowri_123", "Gowri_4321", 
-            {
-                name: document.getElementById("name").value,
-                email: document.getElementById("email").value,
-                message: document.getElementById("message").value
-            })
-            .then(function(response) 
-            {
-                document.getElementById("response-message").textContent = "Message sent successfully!";
-                document.getElementById("contact-form").reset();
-            }, function(error) 
-            {
-                document.getElementById("response-message").textContent = "Failed to send message. Try again.";
-            });
+            showResponseMessage("Message sent successfully!", true);
+            document.getElementById("contact-form").reset();
+        })
+        .catch(() => 
+        {
+            showResponseMessage("Failed to send message. Try again.", false);
         });
+}
+
+// Function to display response message
+
+function showResponseMessage(message, isSuccess) 
+{
+    const responseMessage = document.getElementById("response-message");
+    
+    if (responseMessage) 
+    {
+        responseMessage.textContent = message;
+        responseMessage.style.color = isSuccess ? "green" : "red";
+    }
+}

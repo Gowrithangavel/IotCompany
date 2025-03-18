@@ -42,19 +42,19 @@
                 <h2>Billing Information</h2>
                 <div class="mb-3">
                     <label for="name" class="form-label">Full Name</label>
-                    <input type="text" class="form-control" id="name" name="name" required>
+                    <input type="text" class="form-control" id="name" name="name" autocomplete="name" required>
                 </div>
                 <div class="mb-3">
                     <label for="address" class="form-label">Address</label>
-                    <textarea class="form-control" id="address" name="address" rows="2" required></textarea>
+                    <textarea class="form-control" id="address" name="address" rows="2" autocomplete="street-address" required></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="phone" class="form-label">Phone Number</label>
-                    <input type="number" class="form-control" id="phone" name="phone" pattern="[0-9]{10}" required>
+                    <input type="number" class="form-control" id="phone" name="phone" pattern="[0-9]{10}" autocomplete="tel" required>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email Address</label>
-                    <input type="email" class="form-control" id="email" name="email" required>
+                    <input type="email" class="form-control" id="email" name="email" autocomplete="email" required>
                 </div>
                 <button type="submit" class="btn btn-primary float-end mb-5">Proceed to Payment</button>
             </form>
@@ -82,6 +82,7 @@
 
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script src="assets/js/script.js"></script>
 </body>
 </html>
