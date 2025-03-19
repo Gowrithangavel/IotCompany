@@ -9,12 +9,23 @@
 
     --bs-bg-gradient-1: linear-gradient(135deg, #c56b16, #ba68d3, #3a5fa3);
     --bs-bg-red: #ff0000;
+    --bs-bg-blue: #020242;
+    --bs-bg-green: #033303;
+    --bs-bg-white: #fff;
 
     /* Font color */
 
     --bs-font-white: #ffffff;
     --bs-font-dark: #000000;
+    --bs-font-black: #222;
     --bs-font-pink: #f809b0;
+
+    /* Box-shadow */
+
+    --bs-bs-dark: rgba(0, 0, 0, 0.1);
+    --bs-bs-lightdark: rgba(0, 0, 0, 0.2);
+    --bs-bs-black: #000;
+    --bs-bs-green: #2e8060;
 
     /* Font Size*/
 
@@ -32,10 +43,10 @@ body, html
     padding: 0;
     overflow-x: hidden; /* Prevent horizontal scroll */
     height: 100%;
-    font-family: "Open Sans", sans-serif;
+    font-family: Arial, Times, serif;
 }
   
-a
+a, a:hover
 {
     text-decoration: none;
 }
@@ -43,6 +54,17 @@ a
 li
 {
   list-style: none;
+}
+
+h1, h2, h3, h4,
+h5{
+  font-family: Montserrat;
+  src: url(sansation_light.woff);
+}
+
+hr
+{
+  border: 1px solid black;
 }
   
 
@@ -77,7 +99,7 @@ nav
     min-width: 300px;
     max-width: 90vw;
     background: var(--bs-font-white);
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 6px var(--bs-bs-dark);
     border-radius: 5px;
     z-index: 1000;
 }
@@ -108,7 +130,7 @@ nav
 
 #header 
 {
-    border-bottom: 2px solid #000; 
+    border-bottom: 2px solid var(--bs-bs-black); 
 }
 
 /************************ carousel ********************/
@@ -122,7 +144,7 @@ nav
 
 #carouselLeft 
 {
-    border: 2px solid #2e8060;
+    border: 2px solid var(--bs-bs-green);
     width: 100%;
     height: auto;
     border-top-left-radius: 50px;
@@ -131,7 +153,7 @@ nav
 
 .offer 
 {
-    color: #222;
+    color: var(--bs-font-black);
     display: flex;
     justify-content: center;
     font-weight: bold;
@@ -170,7 +192,7 @@ nav
 .card 
 {
     border: none;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px var(--bs-bs-dark);
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
     border-radius: 12px;
     overflow: hidden;
@@ -179,7 +201,7 @@ nav
 .card:hover 
 {
     transform: translateY(-5px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 6px 15px var(--bs-bs-lightdark);
 }
 
 .card-img-top 
@@ -195,19 +217,15 @@ nav
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #fff;
+    background: var(--bs-bg-white);
     padding: 20px;
     border-radius: 0 0 12px 12px;
 }
 
 .card-title 
 {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #007bff;
+    font-size: var(--bs-font-size-1);
 }
-
-
 
 .cart .cart-items table 
 {
@@ -220,6 +238,34 @@ img
     max-width: 100%;
     height: auto;
 }
+
+.add-to-cart:hover, .btn-primary:hover
+{
+    background-color: var(--bs-bg-blue) !important; 
+    transform: scale(1.1);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Cart Page */
+
+.btn-danger, .btn-success 
+{
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-danger:hover 
+{
+    background-color: #c82333 !important;
+    transform: scale(1.05);
+}
+
+.btn-success:hover 
+{
+    background-color: #218838 !important;
+    transform: scale(1.05);
+}
+
+
 /********************* Contact Form ******************/
 
 .contact 
@@ -232,7 +278,7 @@ img
     max-width: 900px;
     margin: 50px auto;
     background: #222;
-    color: white;   
+    color: var(--bs-font-white);   
     padding: 20px;
     border-radius: 10px;
 }
@@ -240,16 +286,17 @@ img
 .form-control 
 {
     background: #333;
-    color: white;
+    color: var(--bs-font-white);
     border: none;
 }
 
-.form-control:focus 
+.form-control:focus, textarea.form-control:focus
 {
     background: #444;
-    color: white;
+    color: var(--bs-font-white);
     box-shadow: none;
 }
+
 
 /******************** Payment page ******************/
 

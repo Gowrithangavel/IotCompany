@@ -198,7 +198,7 @@ function initializeCartPage()
                 <tr>
                     <td colspan="3"></td>
                     <td><strong>Total Amount:</strong></td>
-                    <td><strong>₹${finalTotal.toFixed(2)}</strong></td>
+                    <td><strong>₹${finalTotal.toFixed(2)}&nbsp;(Incl. GST)</strong></td>
                 </tr>
             `;
         } 
@@ -460,20 +460,25 @@ function displayCartItems(cart, cartItemsTable, finalTotalSpan)
 }
 
 // to generate QR code for payment
-function generateQRCode(finalTotal, qrCodeImg) 
-{
-    let upiID = "example@upi";
-    let upiPaymentURL = `upi://pay?pa=${upiID}&pn=YourName&mc=1234&tid=ABCD1234&tr=${finalTotal.toFixed(2)}&tn=Payment%20for%20Order`;
+function generateQRCode(finalTotal, qrCodeImg) {
+    if (!qrCodeImg || isNaN(finalTotal) || finalTotal <= 0) {
+        console.error("Invalid input: QR Code cannot be generated.");
+        return;
+    }
 
-    const encodedUPI = encodeURIComponent(upiPaymentURL);
-    const qrUrl = `https://quickchart.io/qr?text=${encodedUPI}&size=200`;
+    const upiID = "example@upi";
+    const merchantCode = "1234";  // Change if needed
+    const transactionID = "ABCD1234";  // Change if needed
+    const transactionNote = "Payment for Order";
 
-    console.log("QR Code URL:", qrUrl);
+    // Using `am` instead of `tr` for amount
+    const upiPaymentURL = `upi://pay?pa=${upiID}&pn=YourName&mc=${merchantCode}&tid=${transactionID}&am=${finalTotal.toFixed(2)}&tn=${encodeURIComponent(transactionNote)}`;
+    const qrUrl = `https://quickchart.io/qr?text=${encodeURIComponent(upiPaymentURL)}&size=200`;
 
-    qrCodeImg.src = qrUrl; 
-
+    qrCodeImg.src = qrUrl;
     console.log("Generated QR Code URL:", qrUrl);
 }
+
 
 // to set up payment confirmation
 
@@ -496,6 +501,7 @@ function setupPaymentConfirmation(confirmPaymentBtn, billingInfo, cart, finalTot
             order_items: cart.map(item => `${item.name} (x${item.quantity}) - ₹${(item.price * item.quantity).toFixed(2)}`).join("\n"),
             total_amount: `₹${finalTotal.toFixed(2)}`
         };
+
 
         emailjs.send("Gowri_123", "Gowri_4321", emailParams, "CPLDU8Q42d1UX6ypJ")
             .then(response => 
@@ -582,3 +588,4 @@ function showResponseMessage(message, isSuccess)
         responseMessage.style.color = isSuccess ? "green" : "red";
     }
 }
+
