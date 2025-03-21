@@ -7,11 +7,14 @@
 
     /* background color */
 
-    --bs-bg-gradient-1: linear-gradient(135deg, #c56b16, #ba68d3, #3a5fa3);
+    --bs-bg-gradient-1: linear-gradient(135deg, #3a5fa3, #3994a0, #3a5fa3);
     --bs-bg-red: #ff0000;
     --bs-bg-blue: #020242;
-    --bs-bg-green: #033303;
+    --bs-bg-green: #333203;
     --bs-bg-white: #fff;
+    --bs-bg-lightblue:#2cf5da;
+    --bs-bg-meruoonblue: #02534d;
+    --bs-bg-grey: #e5e4e9;
 
     /* Font color */
 
@@ -25,7 +28,7 @@
     --bs-bs-dark: rgba(0, 0, 0, 0.1);
     --bs-bs-lightdark: rgba(0, 0, 0, 0.2);
     --bs-bs-black: #000;
-    --bs-bs-green: #2e8060;
+    --bs-bs-green: #cbcca0;
 
     /* Font Size*/
 
@@ -56,8 +59,8 @@ li
   list-style: none;
 }
 
-h1, h2, h3, h4,
-h5{
+h1, h2, h3, h4,h5,
+.card-text{
   font-family: Montserrat;
   src: url(sansation_light.woff);
 }
@@ -69,11 +72,24 @@ hr
   
 
 /*********************** Navbar **********************/
+
 nav
 {
     font-size: var(--bs-font-size-3);   
     font-weight:bolder;
     background: var(--bs-bg-gradient-1);
+}
+
+
+.Contact-info
+{
+    font-size: var(--bs-font-size-1);
+}
+
+
+.social_icon
+{
+    font-size: var(--bs-font-size-2);
 }
 
 /* Cart Badge */
@@ -125,14 +141,6 @@ nav
     }
 }
 
-
-/**************************  header *********************/
-
-#header 
-{
-    border-bottom: 2px solid var(--bs-bs-black); 
-}
-
 /************************ carousel ********************/
 
 .carousel-img 
@@ -142,23 +150,23 @@ nav
     border-radius: 50px;
 }
 
-#carouselLeft 
+#carousel
 {
-    border: 2px solid var(--bs-bs-green);
+    border: 2px solid transparent;
     width: 100%;
     height: auto;
     border-top-left-radius: 50px;
     border-top-right-radius: 50px;
 }
 
-.offer 
+.offer      
 {
     color: var(--bs-font-black);
     display: flex;
     justify-content: center;
     font-weight: bold;
     text-align: center;
-    font-size: var(--bs-font-size-base);
+    font-size: var(--bs-font-size-2);
 }
 
 .off 
@@ -225,12 +233,13 @@ nav
 .card-title 
 {
     font-size: var(--bs-font-size-1);
+    font-weight: 500;
 }
 
 .cart .cart-items table 
 {
     width: 100%;
-    white-space: nowrap; /* Prevents text wrapping in tables */
+    white-space: nowrap; 
 }
 
 img 
@@ -239,31 +248,86 @@ img
     height: auto;
 }
 
-.add-to-cart:hover, .btn-primary:hover
+.add-to-cart 
 {
-    background-color: var(--bs-bg-blue) !important; 
-    transform: scale(1.1);
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    border: none;
+    color: white;
+    font-size: 1rem;
+    padding: 6px 10px;
+    border-radius: 25px;
     transition: all 0.3s ease-in-out;
 }
+
+.add-to-cart i 
+{
+    font-size: var(--bs-font-size-1);
+}
+
+.add-to-cart:hover 
+{
+    background: linear-gradient(45deg, #043a74, #043a74);
+    transform: scale(1.1);
+}
+
+.blink 
+{
+    animation: blink 0.5s ease-in-out 2;
+}
+
+@keyframes blink 
+{
+    0% {opacity: 1;}
+    50% {opacity: 0.3;}
+    100% {opacity: 1;}
+}
+
+
 
 /* Cart Page */
 
-.btn-danger, .btn-success 
+@media (max-width: 767px) 
 {
+    td:first-child, th:first-child 
+    { 
+        display: none; 
+    }
+}
+
+.btn-clear, .btn-back, 
+.btn-checkout 
+{
+    color: white;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
     transition: all 0.3s ease-in-out;
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.btn-danger:hover 
+.btn-clear, .btn-back
 {
-    background-color: #c82333 !important;
+    background: var(--bs-bg-meruoonblue);
+}
+
+.btn-clear:hover, .btn-back:hover
+{
+    background: var(--bs-bg-lightblue);
     transform: scale(1.05);
 }
 
-.btn-success:hover 
+.btn-checkout 
 {
-    background-color: #218838 !important;
+    background: linear-gradient(45deg, #5ba728, #5bce74);
+}
+
+.btn-checkout:hover 
+{
+    background: linear-gradient(45deg, #026e1b, #03691b);   
     transform: scale(1.05);
 }
+
 
 
 /********************* Contact Form ******************/

@@ -13,7 +13,16 @@ function initializeCart()
     const cartIcon = document.getElementById("cart-icon");
     const cartDropdown = document.getElementById("cart-dropdown");
 
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let cart = [];
+    try 
+    {
+        cart = JSON.parse(localStorage.getItem("cart")) || [];
+    } 
+    catch (error) 
+    {
+        console.warn("Could not access localStorage:", error);
+        cart = [];
+    }
 
     function updateCartBadge() 
     {
@@ -138,6 +147,35 @@ function initializeCart()
 document.addEventListener("DOMContentLoaded", initializeCart);
 
 
+// Blink effect to add to cart button
+
+function addBlinkEffect(button) 
+{
+    button.classList.add('blink'); 
+
+    // Remove the class after animation completes
+    setTimeout(() => {
+        button.classList.remove('blink');
+    }, 100);
+}
+
+// Function to all "Add to Cart" buttons
+
+function initializeCartButtons() 
+{
+    document.querySelectorAll('.add-to-cart').forEach(button => 
+    {
+        button.addEventListener('click', function(event) 
+        {
+            event.preventDefault(); 
+            addBlinkEffect(this);
+        });
+    });
+}
+
+// Initialize the event listeners on page load
+
+document.addEventListener('DOMContentLoaded', initializeCartButtons);
 
 
 
@@ -191,6 +229,9 @@ function initializeCartPage()
         const gst = subtotal * 0.18;
         const finalTotal = subtotal + gst;
 
+        // if screen is mobile 
+        let isMobile = window.innerWidth <= 767;
+
         // Update summary for checkout.html
         if (isCheckoutPage) 
         {
@@ -233,42 +274,42 @@ function initializeCartPage()
 
     function attachEventListeners() 
     {
-        document.querySelectorAll(".increase-qty").forEach(button => 
-        {
-            button.addEventListener("click", function () 
-            {
-                let name = this.getAttribute("data-name");
-                let item = cart.find(i => i.name === name);
-                if (item) item.quantity++;
-                localStorage.setItem("cart", JSON.stringify(cart));
-                renderCartPage();
-            });
-        });
-
-        document.querySelectorAll(".decrease-qty").forEach(button => 
-        {
-            button.addEventListener("click", function () 
-            {
-                let name = this.getAttribute("data-name");
-                let itemIndex = cart.findIndex(i => i.name === name);
-                if (itemIndex !== -1) 
-                {
-                    if (cart[itemIndex].quantity > 1) 
-                    {
-                        cart[itemIndex].quantity--;
-                    } 
-                    else 
-                    {
-                        cart.splice(itemIndex, 1);
-                    }
-                }
-                localStorage.setItem("cart", JSON.stringify(cart));
-                renderCartPage();
-            });
-        });
-
         if (!isCheckoutPage) 
         {
+            document.querySelectorAll(".increase-qty").forEach(button => 
+            {
+                button.addEventListener("click", function () 
+                {
+                    let name = this.getAttribute("data-name");
+                    let item = cart.find(i => i.name === name);
+                    if (item) item.quantity++;
+                    localStorage.setItem("cart", JSON.stringify(cart));
+                    renderCartPage();
+                });
+            });
+
+            document.querySelectorAll(".decrease-qty").forEach(button => 
+            {
+                button.addEventListener("click", function () 
+                {
+                    let name = this.getAttribute("data-name");
+                    let itemIndex = cart.findIndex(i => i.name === name);
+                    if (itemIndex !== -1) 
+                    {
+                        if (cart[itemIndex].quantity > 1) 
+                        {
+                            cart[itemIndex].quantity--;
+                        } 
+                        else 
+                        {
+                            cart.splice(itemIndex, 1);
+                        }
+                    }
+                    localStorage.setItem("cart", JSON.stringify(cart));
+                    renderCartPage();
+                });
+            });
+
             document.querySelectorAll(".remove").forEach(button =>
             {
                 button.addEventListener("click", function () 
@@ -281,6 +322,7 @@ function initializeCartPage()
             });
         }
     }
+
 
     // Clear Cart Function
     window.clearCart = function () 
