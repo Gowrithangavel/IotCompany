@@ -12,7 +12,7 @@
     --bs-bg-blue: #020242;
     --bs-bg-green: #333203;
     --bs-bg-white: #fff;
-    --bs-bg-lightblue:#2cf5da;
+    --bs-bg-lightblue:#488f85;
     --bs-bg-meruoonblue: #02534d;
     --bs-bg-grey: #e5e4e9;
 
@@ -319,12 +319,13 @@ img
 
 .btn-checkout 
 {
-    background: linear-gradient(45deg, #5ba728, #5bce74);
+    background: linear-gradient(45deg, #059494, #54ccb2);
 }
 
 .btn-checkout:hover 
 {
-    background: linear-gradient(45deg, #026e1b, #03691b);   
+    background: linear-gradient(45deg, #012441, #012441);
+    color: var(--bs-font-white);   
     transform: scale(1.05);
 }
 

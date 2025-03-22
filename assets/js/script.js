@@ -214,13 +214,17 @@ function initializeCartPage()
                 <td><img src="${item.image}" alt="${item.name}" style="width: 50px; height: 50px;"></td>
                 <td>${item.name}</td>
                 <td>
-                    <button class="btn btn-sm btn-secondary decrease-qty" data-name="${item.name}">-</button>
-                    <span class="mx-2">${item.quantity}</span>
-                    <button class="btn btn-sm btn-secondary increase-qty" data-name="${item.name}">+</button>
+                ${
+                    !isCheckoutPage 
+                    ? `<button class="btn btn-sm btn-secondary decrease-qty" data-name="${item.name}">-</button>
+                       <span class="mx-2">${item.quantity}</span>
+                       <button class="btn btn-sm btn-secondary increase-qty" data-name="${item.name}">+</button>`
+                    : `<span class="mx-2">${item.quantity}</span>`
+                }
                 </td>
                 <td>₹${item.price.toFixed(2)}</td>
                 <td>₹${(item.price * item.quantity).toFixed(2)}</td>
-                ${!isCheckoutPage ? `<td><button class="btn btn-danger remove" data-name="${item.name}">Remove</button></td>` : ""}
+                ${!isCheckoutPage ? `<td><button class="btn btn-danger remove" style="padding:6px 8px" data-name="${item.name}">Remove</button></td>` : ""}
             `;
             cartTableBody.appendChild(row);
         });
@@ -368,37 +372,55 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 //   Checkout
-
 function initializeCheckoutPage() 
 {
     const checkoutForm = document.getElementById("checkout-form");
 
-    if (!checkoutForm) return;
+    // Check if the form exists (although we already check before calling this)
+    if (!checkoutForm) 
+    {
+        return;
+    }
 
     checkoutForm.addEventListener("submit", function (event) 
     {
-        event.preventDefault(); // Prevent form submission
+        event.preventDefault();
 
         // Get Billing Info
-        let billingInfo = 
+        const billingData = 
         {
-            name: document.getElementById("name").value,
-            email: document.getElementById("email").value,
-            address: document.getElementById("address").value,
-            phone: document.getElementById("phone").value
+            fullname: document.getElementById('fullname').value,
+            address: document.getElementById('street-address').value,
+            phone: document.getElementById('phone').value,
+            email: document.getElementById('email').value
         };
 
-        // Store Billing Info in Local Storage
-        localStorage.setItem("billingInfo", JSON.stringify(billingInfo));
+        console.log("Billing Data:", billingData);
 
-        // Redirect to Payment Page
+        // Check if all form fields have values
+        if (!billingData.fullname || !billingData.address || !billingData.phone || !billingData.email) 
+        {
+            alert("Please fill out all the required fields.");
+            return;
+        }
+
+        // Store Billing Info in Local Storage
+        localStorage.setItem('billingData', JSON.stringify(billingData));
+
         window.location.href = "payment.html";
     });
 }
-
 // Call the function after DOM is loaded
-document.addEventListener("DOMContentLoaded", initializeCheckoutPage);
+document.addEventListener("DOMContentLoaded", function() 
+{
+    const checkoutForm = document.getElementById("checkout-form");
 
+    if (!checkoutForm) 
+    {
+        return; // Exit if the form is not found, no need to continue
+    } 
+    initializeCheckoutPage();
+});
 
 
 
@@ -440,29 +462,30 @@ function initializePaymentPage()
 
     if (!billingInfoDiv || !cartItemsTable || !finalTotalSpan || !qrCodeImg || !confirmPaymentBtn) return;
 
-    let billingInfo = JSON.parse(localStorage.getItem("billingInfo")) || {};
+    const billingData = JSON.parse(localStorage.getItem('billingData'));
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    displayBillingInfo(billingInfo, billingInfoDiv);
+    displayBillingInfo(billingData, billingInfoDiv);
     let finalTotal = displayCartItems(cart, cartItemsTable, finalTotalSpan);
     generateQRCode(finalTotal, qrCodeImg);
-    setupPaymentConfirmation(confirmPaymentBtn, billingInfo, cart, finalTotal);
+    setupPaymentConfirmation(confirmPaymentBtn, billingData, cart, finalTotal);
 }
 
 // to display billing information
-function displayBillingInfo(billingInfo, billingInfoDiv) 
+function displayBillingInfo(billingData, billingInfoDiv) 
 {
-    if (billingInfo && billingInfo.name) 
+    if (billingData && billingData.fullname) 
     {
         billingInfoDiv.innerHTML = `
-            <p><strong>Name:</strong> ${billingInfo.name}</p>
-            <p><strong>Email:</strong> ${billingInfo.email}</p>
-            <p><strong>Address:</strong> ${billingInfo.address}</p>
-            <p><strong>Phone:</strong> ${billingInfo.phone}</p>
+            <p><strong>Name:</strong> ${billingData.fullname}</p>
+            <p><strong>Address:</strong> ${billingData.address}</p>
+            <p><strong>Phone:</strong> ${billingData.phone}</p>
+            <p><strong>Email:</strong> ${billingData.email}</p>
         `;
     } 
     else 
     {
+        console.log("No billing data found in localStorage.");
         billingInfoDiv.innerHTML = `<p class="text-danger">Billing information not found. Please go back and enter details.</p>`;
     }
 }
@@ -502,15 +525,17 @@ function displayCartItems(cart, cartItemsTable, finalTotalSpan)
 }
 
 // to generate QR code for payment
-function generateQRCode(finalTotal, qrCodeImg) {
-    if (!qrCodeImg || isNaN(finalTotal) || finalTotal <= 0) {
+function generateQRCode(finalTotal, qrCodeImg) 
+{
+    if (!qrCodeImg || isNaN(finalTotal) || finalTotal <= 0) 
+    {
         console.error("Invalid input: QR Code cannot be generated.");
         return;
     }
 
     const upiID = "example@upi";
-    const merchantCode = "1234";  // Change if needed
-    const transactionID = "ABCD1234";  // Change if needed
+    const merchantCode = "1234";  
+    const transactionID = "ABCD1234";  
     const transactionNote = "Payment for Order";
 
     // Using `am` instead of `tr` for amount
@@ -524,11 +549,11 @@ function generateQRCode(finalTotal, qrCodeImg) {
 
 // to set up payment confirmation
 
-function setupPaymentConfirmation(confirmPaymentBtn, billingInfo, cart, finalTotal) 
+function setupPaymentConfirmation(confirmPaymentBtn, billingData, cart, finalTotal) 
 {
     confirmPaymentBtn.addEventListener("click", function () 
     {
-        if (!billingInfo.email) 
+        if (!billingData.email) 
         {
             alert("Email is missing! Please enter your billing information.");
             return;
@@ -536,10 +561,10 @@ function setupPaymentConfirmation(confirmPaymentBtn, billingInfo, cart, finalTot
 
         let emailParams = 
         {
-            to_email: billingInfo.email,
-            user_name: billingInfo.name,
-            user_address: billingInfo.address,
-            user_phone: billingInfo.phone,
+            to_email: billingData.email,
+            user_name: billingData.fullname,
+            user_address: billingData.address,
+            user_phone: billingData.phone,
             order_items: cart.map(item => `${item.name} (x${item.quantity}) - ₹${(item.price * item.quantity).toFixed(2)}`).join("\n"),
             total_amount: `₹${finalTotal.toFixed(2)}`
         };
@@ -550,6 +575,7 @@ function setupPaymentConfirmation(confirmPaymentBtn, billingInfo, cart, finalTot
             {
                 alert("Payment Confirmed! Email Sent Successfully.");
                 console.log("Email Sent:", response);
+                // localStorage.removeItem("billingData");
                 localStorage.removeItem("cart");
                 window.location.href = "index.html";
             })
