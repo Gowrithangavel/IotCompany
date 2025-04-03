@@ -26,8 +26,9 @@ function initializeCart()
 
     function updateCartBadge() 
     {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
         if (!cartBadge) return;
-        let totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+        let totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0); 	
         cartBadge.textContent = totalQuantity;
     }
 
@@ -87,6 +88,9 @@ function initializeCart()
         const productImage = card.querySelector(".card-img-top").src;
         const priceText = card.querySelector(".card-text").textContent.replace(/[^\d.]/g, "");
         const productPrice = parseFloat(priceText);
+
+          // Get the current cart from localStorage or initialize it as an empty array
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
         let existingItem = cart.find(item => item.name === productName);
 
@@ -533,7 +537,7 @@ function generateQRCode(finalTotal, qrCodeImg)
         return;
     }
 
-    const upiID = "example@upi";
+    const upiID = "gowrithangavelu21-2@okicici";
     const merchantCode = "1234";  
     const transactionID = "ABCD1234";  
     const transactionNote = "Payment for Order";
