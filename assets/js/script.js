@@ -24,7 +24,7 @@ function initializeCart()
         cart = [];
     }
 
-    function updateCartBadge() 
+    function updateCartBadge()      
     {
         let cart = JSON.parse(localStorage.getItem("cart")) || [];
         if (!cartBadge) return;
@@ -83,15 +83,12 @@ function initializeCart()
     function addToCart(event) 
     {
         event.preventDefault();
-        const card = event.target.closest(".card");
+        const card = event.target.closest(".card-main");
         const productName = card.querySelector(".card-title").textContent;
         const productImage = card.querySelector(".card-img-top").src;
         const priceText = card.querySelector(".card-text").textContent.replace(/[^\d.]/g, "");
         const productPrice = parseFloat(priceText);
-
-          // Get the current cart from localStorage or initialize it as an empty array
-        let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
+        
         let existingItem = cart.find(item => item.name === productName);
 
         if (existingItem) 
@@ -572,29 +569,33 @@ function setupPaymentConfirmation(confirmPaymentBtn, billingData, cart, finalTot
             order_items: cart.map(item => `${item.name} (x${item.quantity}) - ₹${(item.price * item.quantity).toFixed(2)}`).join("\n"),
             total_amount: `₹${finalTotal.toFixed(2)}`
         };
+        
+        Sendmail("Electrro_Shop", "Electtro_User_Confirm",emailParams,"CPLDU8Q42d1UX6ypJ")
+        Sendmail("Electrro_Shop", "Electrro_Confirmation",emailParams,"CPLDU8Q42d1UX6ypJ")
+    });
+}
 
-
-        emailjs.send("Gowri_123", "Gowri_4321", emailParams, "CPLDU8Q42d1UX6ypJ")
-            .then(response => 
-            {
-                alert("Payment Confirmed! Email Sent Successfully.");
-                console.log("Email Sent:", response);
-                // localStorage.removeItem("billingData");
-                localStorage.removeItem("cart");
-                window.location.href = "index.html";
-            })
-            .catch(error => 
-            {
-                alert("Error sending email. Please try again.");
-                console.error("Email Error:", error);
-            });
+function Sendmail(service_id,template_id,emailParams,public_key)
+{
+    console.log(service_id, template_id, emailParams, public_key);
+    emailjs.send(service_id, template_id, emailParams, public_key)
+    .then(response => 
+    {
+        alert("Payment Confirmed! Email Sent Successfully.");
+        console.log("Email Sent:", response);
+        // localStorage.removeItem("billingData");
+        localStorage.removeItem("cart");
+        window.location.href = "index.html";
+    })
+    .catch(error => 
+    {
+        alert("Error sending email. Please try again.");
+        console.error("Email Error:", error);
     });
 }
 
 // Call the function after DOM is loaded
 document.addEventListener("DOMContentLoaded", initializePaymentPage);
-
-
 
 // Contact page
 
